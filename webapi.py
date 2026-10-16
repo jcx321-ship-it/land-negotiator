@@ -37,6 +37,14 @@ def get(path: str):
         return 200, CASES
     if path.startswith("/api/developers"):
         return 200, list(DEVELOPERS.values())
+    if path.startswith("/api/evaluate"):  # diagnostics: which Nemotron ids Token Factory serves (no secrets)
+        from evaluator import llm
+        if not llm.available():
+            return 200, {"ai": False}
+        try:
+            return 200, {"ai": True, "nemotron_models": [m for m in llm.list_models() if "nemotron" in m.lower()]}
+        except Exception as e:
+            return 200, {"ai": True, "error": f"{type(e).__name__}: {e}"}
     return 404, {"error": "not found"}
 
 
