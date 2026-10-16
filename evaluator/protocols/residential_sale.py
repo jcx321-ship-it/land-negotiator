@@ -56,7 +56,8 @@ def build(p: dict):
     soft_t = soft * (1 + p["contingency"])
     gross_rev = units_for_sale * unit_price
     var = gross_rev * (p["marketing_pct"] + p["commission_pct"])
-    dev = add(spread(-hard_t, start_c, p["construction_months"], horizon),
+    hard_series = spread(-hard_t, start_c, p["construction_months"], horizon)   # bridge-loan base (Founder)
+    dev = add(hard_series,
               spread(-soft_t * 0.6, 0, max(1, start_c), horizon),
               spread(-soft_t * 0.4, start_c, p["construction_months"], horizon))
     costs = add(dev, [-x * (p["marketing_pct"] + p["commission_pct"]) for x in rev])
@@ -70,12 +71,14 @@ def build(p: dict):
                      unit_price=unit_price, special_unit_price=special, gross_revenue=gross_rev,
                      total_revenue_equiv=units * unit_price, hard_with_contingency=hard_t,
                      soft_with_contingency=soft_t, variable_costs=var, horizon_months=horizon, hard_cost_m2=hcm2)
-    return flows_lin, breakdown, in_kind_value, dev
+    return flows_lin, breakdown, in_kind_value, hard_series
 
 
 def evaluate(p: dict) -> dict:
     flows_lin, bd, in_kind, dev = build(p)
-    debt = p.get("debt")
+    from ..debt import DEFAULT_DEBT
+    debt = {**DEFAULT_DEBT, **(p.get("debt") or {})}
+    debt.setdefault("cap_amount", debt["max_pct_of_sales"] * bd["gross_revenue"])
     levered = (debt or {}).get("enabled", True)
     mm = p.get("min_multiple", MIN_EQUITY_MULTIPLE) if levered else None   # 2.0x is measured with debt (Founder)
     sol = solve_with_hurdles(flows_lin, dev, debt, min_multiple=mm)

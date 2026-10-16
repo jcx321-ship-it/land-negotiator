@@ -38,7 +38,8 @@ def build(p: dict):
     horizon = sale_m + 1
     hard_t = built * p["hard_cost_m2"] * (1 + p["contingency"])
     soft_t = built * p["hard_cost_m2"] * p["soft_pct_of_hard"] * (1 + p["contingency"])
-    dev = add(spread(-hard_t, start_c, p["construction_months"], horizon), spread(-soft_t, 0, end_c, horizon))
+    hard_series = spread(-hard_t, start_c, p["construction_months"], horizon)   # bridge-loan base (Founder)
+    dev = add(hard_series, spread(-soft_t, 0, end_c, horizon))
     full_rent_m = gla * p["rent_m2_month"]
     noi = [0.0] * horizon
     for t in range(end_c, sale_m):
@@ -60,12 +61,15 @@ def build(p: dict):
               hard_with_contingency=hard_t, soft_with_contingency=soft_t, stabilized_noi_year=stab_noi_y,
               noi_margin=(1 - p["opex_pct_of_rent"]) * (1 - p["collection_loss"]),
               exit_cap=cap, exit_cap_source=cap_src, exit_value=exit_value, horizon_months=horizon)
-    return flows_lin, bd, dev, p
+    return flows_lin, bd, hard_series, p
 
 
 def evaluate(p: dict) -> dict:
     flows_lin, bd, dev, pp = build(p)
-    sol = solve_with_hurdles(flows_lin, dev, p.get("debt"), min_multiple=None)
+    from ..debt import DEFAULT_DEBT
+    debt = {**DEFAULT_DEBT, **(p.get("debt") or {})}
+    debt.setdefault("cap_amount", debt["max_pct_of_sales"] * bd["exit_value"])
+    sol = solve_with_hurdles(flows_lin, dev, debt, min_multiple=None)
     P = sol["P"]
     total_cost = P + bd["hard_with_contingency"] + bd["soft_with_contingency"]
     yoc = bd["stabilized_noi_year"] / total_cost if total_cost > 0 else None
