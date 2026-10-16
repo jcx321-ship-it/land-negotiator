@@ -50,7 +50,7 @@ def available() -> bool:
     return bool(os.environ.get("NEBIUS_API_KEY"))
 
 
-def _chat(messages: list[dict], model: str, max_tokens: int = 600, json_mode: bool = False) -> str:
+def _chat(messages: list[dict], model: str, max_tokens: int = 2500, json_mode: bool = False) -> str:
     global _calls
     if _calls >= MAX_CALLS:
         raise RuntimeError("LLM call budget for this run exhausted (spend guard).")
@@ -65,9 +65,14 @@ def _chat(messages: list[dict], model: str, max_tokens: int = 600, json_mode: bo
                                               "Content-Type": "application/json"})
         try:
             with urllib.request.urlopen(req, timeout=150) as resp:
-                msg = json.load(resp)["choices"][0]["message"]
-                LAST["model"] = model
-                return msg.get("content") or msg.get("reasoning_content") or ""
+                ch = json.load(resp)["choices"][0]
+                msg = ch.get("message") or {}
+                content = msg.get("content") or ""
+                reasoning = msg.get("reasoning_content") or msg.get("reasoning") or ""
+                LAST.update(model=model, finish_reason=ch.get("finish_reason"),
+                            content_head=content[:300], reasoning_chars=len(reasoning))
+                # Reasoning models may leave the answer in the reasoning channel; keep both for the parser.
+                return content if "{" in content or not reasoning else content + "\n" + reasoning
         except urllib.error.HTTPError as e:
             if attempt == 0 and e.code in (400, 404):
                 model = resolve_model(model)
@@ -93,12 +98,23 @@ def extract_offer(text: str) -> dict:
 
 
 def parse_json(text: str) -> dict:
+    """Return the last complete JSON object in the text (reasoning models may think before answering)."""
     t = text.strip()
-    if t.startswith("```"):
-        t = t.strip("`")
-        t = t[t.find("{"):]
-    i, j = t.find("{"), t.rfind("}")
-    return json.loads(t[i:j + 1])
+    if "</think>" in t:
+        t = t.split("</think>")[-1]
+    dec = json.JSONDecoder()
+    found = None
+    for k in [m.start() for m in __import__("re").finditer(r"\{", t)]:
+        try:
+            obj, _ = dec.raw_decode(t[k:])
+            if isinstance(obj, dict) and (found is None or len(obj) >= len(found)):
+                found = obj
+        except ValueError:
+            continue
+    if found is None:
+        raise ValueError(f"model returned no JSON (finish_reason={LAST.get('finish_reason')}, "
+                         f"head={t[:160]!r})")
+    return found
 
 
 NARRATIVE_PROMPT = """You are a senior real estate development analyst. Write 4-6 sentences for an investment
