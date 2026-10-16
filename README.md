@@ -33,7 +33,8 @@ models and against public references. Every rule in `evaluator/criteria.py` is t
 8  VERDICT      GO / BORDERLINE / NO-GO / NO FIT
 ```
 Cost comes from the specification (structure + finishes + amenities), not from the segment.
-Contingency is 5% per cost block. Decisions are pre-tax. Financing is a switch.
+Contingency is 5% per cost block. Decisions are pre-tax. Financing is a switch; the bridge loan funds the construction
+budget (hard costs), capped at 65% of the sales value (public bank terms). Quick tests: hard costs ~40% of sales value, land ~20% (never hurdles: the IRR approves).
 
 ## The AI part (Nebius Token Factory + NVIDIA Nemotron)
 | Step | Model | Role |
@@ -49,12 +50,12 @@ closest Nemotron and retries.
 ## Demo
 | Developer | Case | Verdict | What it shows |
 |---|---|---|---|
-| DEV-1 residential | A | GO | Asking 24 M under a 27.5 M max bid; deferral + in-kind units add 6.4 M vs. cash (21.0 M) |
-| DEV-1 | B | NO-GO | Supports only 5.9 M (the 2.0x multiple binds) against 25 M asked; no scenario rescues it |
-| DEV-1 | C | BORDERLINE | 28.5 M asked vs 27.5 M; only the anchor-employer scenario (30.0 M) covers it, and a feasibility is open |
+| DEV-1 residential | A | GO | Asking 46 M under a 56.2 M max bid (closed comparables bind); deferral + in-kind units add 8.6 M vs. paying cash (48.6 M). Pro forma at max bid ≈ land 22 / hard 40 / soft+sales 10 / finance 4 / margin 21 |
+| DEV-1 | B | NO-GO | Hard costs at 64% of sales (standard ~40%): supports only 10.7 M against 25 M asked; no scenario rescues it |
+| DEV-1 | C | BORDERLINE | 54 M asked fits under 55.0 M, but a critical feasibility is open: payments tied to its accreditation |
 | DEV-1 | G | NO-GO (land) | Uncertain title kills the land before any math |
 | DEV-1 | H | NO FIT | Wrong market and size for this developer: discarded in one step |
-| DEV-3 build-to-rent | D | GO | Forward sale at an 8.5% cap supports 58.1 M; without a signed buyer (speculative 10%) only 26.4 M |
+| DEV-3 build-to-rent | D | GO | Forward sale at an 8.5% cap supports 63.4 M; without a signed buyer (speculative 10%) only 31.6 M |
 | DEV-2 industrial | E | GO | Net area after easements, lot types with different absorption, open infrastructure |
 | — | F | No automatic verdict | Land banking: partial protocol, checklist, no invented price |
 
