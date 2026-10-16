@@ -2,7 +2,7 @@
  "case_id": "C-residential-borderline",
  "label": "FICTITIOUS demo case - invented numbers, no real parcel, no client data",
  "vocation": "residential_sale",
- "asking_price": 28500000,
+ "asking_price": 54000000.0,
  "dd": {
   "title_certain": true,
   "seller_can_transfer": true,
@@ -15,7 +15,7 @@
  "params": {
   "land_area_m2": 2500,
   "far": 3.0,
-  "sale_price_m2": 38000,
+  "sale_price_m2": 42000,
   "avg_unit_m2": 90,
   "absorption_units_month": 3,
   "land_structure": {
@@ -34,8 +34,8 @@
   },
   "in_kind_units": 4,
   "structure": "mid_rise",
-  "finish_level": "high",
-  "amenities_cost_m2": 1500
+  "finish_level": "medium",
+  "amenities_cost_m2": 800
  },
  "comparables": [
   {
