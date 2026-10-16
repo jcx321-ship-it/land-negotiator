@@ -21,6 +21,7 @@ Attack the INPUTS and the open risks. Return ONE JSON object (no prose) with key
 
 
 def intake(text: str) -> dict:
+    llm._calls = 0  # the spend guard counts calls per request, not per warm serverless instance
     if MOCK:
         return {"_mock": True, "vocation": "residential_sale", "notes": "MOCK: values not read from text"}
     return llm.extract_offer(text)
@@ -56,11 +57,12 @@ def red_team(result: dict, notes: str, ctx: dict | None, lang: str = "en") -> di
         payload["market_context_snippets"] = [r["content"] for r in ctx["results"]][:5]
     rules = "\n".join(f"- {t}" for _, t in RULES)
     out = llm._chat([{"role": "system", "content": RED_TEAM_PROMPT.format(rules=rules, lang="Spanish" if lang == "es" else "English")},
-                     {"role": "user", "content": json.dumps(payload, default=str)}], ULTRA_MODEL, max_tokens=1200, json_mode=True)
+                     {"role": "user", "content": json.dumps(payload, default=str)}], ULTRA_MODEL, max_tokens=int(os.environ.get("RED_TEAM_MAX_TOKENS", "4000")), json_mode=True)
     return llm.parse_json(out)
 
 
 def run(offer: dict, lang: str = "en", use_ai: bool = True, market: str = "", thesis: dict | None = None) -> dict:
+    llm._calls = 0
     result = evaluate_offer(offer, thesis)
     out = {"result": result, "ai": {"enabled": use_ai and (llm.available() or MOCK)}}
     if use_ai and result.get("verdict") != "NO FIT":
@@ -70,5 +72,6 @@ def run(offer: dict, lang: str = "en", use_ai: bool = True, market: str = "", th
             out["red_team"] = red_team(result, offer.get("notes", ""), ctx, lang)
         except Exception as e:
             out["ai"]["error"] = f"{type(e).__name__}: {e}"
+        out["ai"]["model"] = llm.LAST.get("model")
     out["memo_md"] = render(result, lang)
     return out
