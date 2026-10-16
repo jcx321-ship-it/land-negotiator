@@ -1,0 +1,15 @@
+{
+ "case_id": "F-land-banking",
+ "label": "FICTITIOUS demo case - invented numbers, no real parcel, no client data",
+ "vocation": "land_banking",
+ "asking_price": null,
+ "dd": {
+  "title_certain": null,
+  "seller_can_transfer": true,
+  "social_opposition_material": false,
+  "protected_area_incompatible": false,
+  "nonremediable_physical": false,
+  "current_zoning_allows_product": true,
+  "critical_feasibility": "accredited"
+ }
+}

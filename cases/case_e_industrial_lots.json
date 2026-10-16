@@ -1,0 +1,105 @@
+{
+ "case_id": "E-industrial-lots",
+ "label": "FICTITIOUS demo case - invented numbers, no real parcel, no client data",
+ "vocation": "industrial_lots",
+ "asking_price": 150000000,
+ "dd": {
+  "title_certain": true,
+  "seller_can_transfer": true,
+  "social_opposition_material": false,
+  "protected_area_incompatible": false,
+  "nonremediable_physical": false,
+  "current_zoning_allows_product": true,
+  "critical_feasibility": "prefeasibility"
+ },
+ "params": {
+  "gross_m2": 300000,
+  "net_pct": 0.62,
+  "urbanization_cost_per_gross_m2": 420,
+  "lot_types": [
+   {
+    "name": "small",
+    "share_of_net": 0.35,
+    "price_m2": 2600,
+    "absorption_m2_month": 2500
+   },
+   {
+    "name": "large",
+    "share_of_net": 0.45,
+    "price_m2": 2200,
+    "absorption_m2_month": 3500
+   },
+   {
+    "name": "macrolot",
+    "share_of_net": 0.2,
+    "price_m2": 1800,
+    "absorption_m2_month": 3000
+   }
+  ],
+  "infrastructure": [
+   {
+    "name": "Power substation",
+    "cost": 18000000,
+    "status": "prefeasibility"
+   },
+   {
+    "name": "Water connection",
+    "cost": 6000000,
+    "status": "accredited"
+   }
+  ],
+  "land_structure": {
+   "upfront_pct": 0.2,
+   "deferred": [
+    {
+     "month": 12,
+     "pct": 0.4
+    },
+    {
+     "month": 24,
+     "pct": 0.4
+    }
+   ],
+   "acq_cost_pct": 0.06
+  }
+ },
+ "comparables": [
+  {
+   "price_m2": 700,
+   "closed": true
+  },
+  {
+   "price_m2": 650,
+   "closed": true
+  }
+ ],
+ "scenarios": [
+  {
+   "name": "Lot prices -8% (new competing park)",
+   "evidence": "competing park announced",
+   "overrides": {
+    "lot_types": [
+     {
+      "name": "small",
+      "share_of_net": 0.35,
+      "price_m2": 2392,
+      "absorption_m2_month": 2500
+     },
+     {
+      "name": "large",
+      "share_of_net": 0.45,
+      "price_m2": 2024,
+      "absorption_m2_month": 3500
+     },
+     {
+      "name": "macrolot",
+      "share_of_net": 0.2,
+      "price_m2": 1656,
+      "absorption_m2_month": 3000
+     }
+    ]
+   }
+  }
+ ],
+ "market": "Bajío"
+}

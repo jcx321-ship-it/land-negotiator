@@ -1,0 +1,57 @@
+{
+ "case_id": "C-residential-borderline",
+ "label": "FICTITIOUS demo case - invented numbers, no real parcel, no client data",
+ "vocation": "residential_sale",
+ "asking_price": 28500000,
+ "dd": {
+  "title_certain": true,
+  "seller_can_transfer": true,
+  "social_opposition_material": false,
+  "protected_area_incompatible": false,
+  "nonremediable_physical": false,
+  "current_zoning_allows_product": true,
+  "critical_feasibility": "open"
+ },
+ "params": {
+  "land_area_m2": 2500,
+  "far": 3.0,
+  "sale_price_m2": 38000,
+  "avg_unit_m2": 90,
+  "absorption_units_month": 3,
+  "land_structure": {
+   "upfront_pct": 0.3,
+   "deferred": [
+    {
+     "month": 12,
+     "pct": 0.35
+    },
+    {
+     "month": 24,
+     "pct": 0.35
+    }
+   ],
+   "acq_cost_pct": 0.06
+  },
+  "in_kind_units": 4,
+  "structure": "mid_rise",
+  "finish_level": "high",
+  "amenities_cost_m2": 1500
+ },
+ "comparables": [
+  {
+   "price_m2": 22000,
+   "closed": true
+  }
+ ],
+ "scenarios": [
+  {
+   "name": "Absorption 4/month (anchor employer arriving)",
+   "overrides": {
+    "absorption_units_month": 4
+   }
+  }
+ ],
+ "irreplaceable": false,
+ "market": "Querétaro",
+ "segment": "residential"
+}

@@ -1,0 +1,62 @@
+{
+ "case_id": "D-rental-premium",
+ "label": "FICTITIOUS demo case - invented numbers, no real parcel, no client data",
+ "vocation": "rental",
+ "asking_price": 45000000,
+ "dd": {
+  "title_certain": true,
+  "seller_can_transfer": true,
+  "social_opposition_material": false,
+  "protected_area_incompatible": false,
+  "nonremediable_physical": false,
+  "current_zoning_allows_product": true,
+  "critical_feasibility": "accredited"
+ },
+ "params": {
+  "land_area_m2": 3000,
+  "far": 4,
+  "hard_cost_m2": 15500,
+  "rent_m2_month": 420,
+  "avg_unit_m2": 70,
+  "leases_per_month": 10,
+  "forward_sale": true,
+  "committed_cap": 0.085,
+  "land_structure": {
+   "upfront_pct": 0.5,
+   "deferred": [
+    {
+     "month": 18,
+     "pct": 0.5
+    }
+   ],
+   "acq_cost_pct": 0.06
+  }
+ },
+ "comparables": [],
+ "scenarios": [
+  {
+   "name": "No signed buyer: speculative exit at 10% cap",
+   "evidence": "binding LOI not yet signed",
+   "overrides": {
+    "forward_sale": false
+   }
+  },
+  {
+   "name": "Achieved rent -8% vs asking",
+   "evidence": "latest signed lease below asking",
+   "overrides": {
+    "rent_m2_month": 386
+   }
+  },
+  {
+   "name": "Lease-up 6 units/month",
+   "evidence": "competing building opened nearby",
+   "overrides": {
+    "leases_per_month": 6
+   }
+  }
+ ],
+ "irreplaceable": true,
+ "market": "CDMX",
+ "segment": "residential rental"
+}

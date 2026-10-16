@@ -1,0 +1,5 @@
+{"developer_id": "DEV-3", "name": "Developer 3 - build to rent, sell to institutional",
+ "label": "FICTITIOUS demo - invented developer and numbers, no real parcel, no client data",
+ "vocation": "rental", "markets": ["CDMX", "Guadalajara"], "land_m2": [1500, 8000],
+ "max_land_ticket": 80000000, "product": {"avg_unit_m2": 70},
+ "never_buy": ["uncertain title", "no market absorption"]}

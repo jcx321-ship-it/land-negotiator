@@ -1,0 +1,49 @@
+{
+ "case_id": "B-residential-no-go",
+ "label": "FICTITIOUS demo case - invented numbers, no real parcel, no client data",
+ "vocation": "residential_sale",
+ "asking_price": 25000000,
+ "dd": {
+  "title_certain": true,
+  "seller_can_transfer": true,
+  "social_opposition_material": false,
+  "protected_area_incompatible": false,
+  "nonremediable_physical": false,
+  "current_zoning_allows_product": true,
+  "critical_feasibility": "accredited"
+ },
+ "params": {
+  "land_area_m2": 2500,
+  "far": 3.0,
+  "sale_price_m2": 33000,
+  "avg_unit_m2": 90,
+  "absorption_units_month": 3,
+  "land_structure": {
+   "upfront_pct": 1.0,
+   "deferred": [],
+   "acq_cost_pct": 0.06
+  },
+  "in_kind_units": 0,
+  "structure": "mid_rise",
+  "finish_level": "high",
+  "amenities_cost_m2": 1500
+ },
+ "comparables": [
+  {
+   "price_m2": 19000,
+   "closed": true
+  }
+ ],
+ "scenarios": [
+  {
+   "name": "Prices +5% (best recent launch)",
+   "evidence": "one launch sold above list",
+   "overrides": {
+    "sale_price_m2": 34650
+   }
+  }
+ ],
+ "irreplaceable": false,
+ "market": "Querétaro",
+ "segment": "residential"
+}

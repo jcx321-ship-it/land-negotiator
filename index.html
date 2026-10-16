@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Land Negotiator</title>
+<style>
+:root{--bg:#f6f5f1;--card:#fff;--ink:#1d1f1c;--mute:#6b6f68;--line:#e3e1da;--go:#1f7a4d;--go-bg:#e3f2ea;--mid:#9a6a00;--mid-bg:#fbf0d4;--no:#b3261e;--no-bg:#fbe4e1;--acc:#2f4f6f;--acc2:#7a5c9e}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141513;--card:#1d1f1c;--ink:#ecebe6;--mute:#a3a69f;--line:#33352f;--go:#5cc28e;--go-bg:#16301f;--mid:#e0b552;--mid-bg:#33290f;--no:#f08a80;--no-bg:#3a1916;--acc:#8fb3d6;--acc2:#b9a0dc}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{padding:20px 16px 8px;max-width:1200px;margin:auto;display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+h1{font-size:22px;margin:0}h1 small{display:block;font-size:13px;color:var(--mute);font-weight:400;margin-top:2px}
+.tag{font-size:12px;color:var(--mute)}button,select{font:inherit}
+main{max-width:1200px;margin:auto;padding:8px 16px 40px;display:grid;grid-template-columns:340px 1fr;gap:16px}
+@media (max-width:880px){main{grid-template-columns:1fr}}
+@media (max-width:560px){.bars{grid-template-columns:1fr 64px}.bars>span:first-child,.bars>span:nth-child(3n+1){grid-column:1/-1}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.card h2{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute);margin:0 0 10px}
+textarea{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:12px/1.4 ui-monospace,Menlo,monospace;min-height:80px}
+.btn{border:0;border-radius:8px;padding:10px 14px;background:var(--acc);color:#fff;cursor:pointer;font-weight:600}
+.btn.ghost{background:transparent;color:var(--acc);border:1px solid var(--line)}.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.chips{display:flex;gap:6px;flex-wrap:wrap}.chip{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:5px 10px;cursor:pointer;font-size:12.5px}
+.chip.on{border-color:var(--acc);color:var(--acc)}
+.verdict{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.badge{font-size:26px;font-weight:800;padding:8px 18px;border-radius:10px}
+.GO{background:var(--go-bg);color:var(--go)}.BORDERLINE{background:var(--mid-bg);color:var(--mid)}.NOGO{background:var(--no-bg);color:var(--no)}.NA{background:var(--bg);color:var(--mute);border:1px dashed var(--line)}
+ul{margin:8px 0 0;padding-left:18px}.muted{color:var(--mute);font-size:13px}.warn{color:var(--mid);font-size:13px}
+.gates{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px}
+.gate{border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:13px;display:flex;gap:8px;align-items:flex-start}
+.dot{width:10px;height:10px;border-radius:50%;margin-top:5px;flex:none}.dg{background:var(--go)}.dr{background:var(--no)}.dy{background:var(--mid)}.dn{background:var(--line)}
+.bars{display:grid;grid-template-columns:minmax(150px,280px) 1fr 76px;gap:8px 10px;align-items:center;font-size:13px}
+.track{position:relative;height:16px;background:var(--bg);border-radius:4px}.fill{height:100%;border-radius:4px}
+.mark{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink)}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media (max-width:880px){.split{grid-template-columns:1fr}}
+.stack>*+*{margin-top:16px}details summary{cursor:pointer;color:var(--acc)}
+pre{white-space:pre-wrap;font-size:12px;background:var(--bg);padding:10px;border-radius:8px;border:1px solid var(--line)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}@media (max-width:560px){.kpis{grid-template-columns:1fr 1fr}}
+.kpi{border:1px solid var(--line);border-radius:10px;padding:10px}.kpi b{display:block;font-size:18px}.kpi span{font-size:12px;color:var(--mute)}
+a{color:var(--acc)}
+</style>
+</head>
+<body>
+<header>
+  <h1 data-i="title">Land Negotiator<small data-i="sub">How much to pay for land, and how to pay it: a senior developer's 20-year criterion, made executable. Nemotron reads and argues; code does the math.</small></h1>
+  <div class="tag"><select id="lang"><option value="en">English</option><option value="es">Español</option></select> · <span data-i="demo">Demo data is fictitious.</span></div>
+</header>
+<main>
+  <section class="stack">
+    <div class="card">
+      <h2 data-i="dev">0 · Developer thesis</h2>
+      <select id="dev" style="width:100%;padding:8px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink)"></select>
+      <p class="muted" id="devtxt"></p>
+    </div>
+    <div class="card">
+      <h2 data-i="cases">1 · Demo cases</h2>
+      <div class="chips" id="cases"></div>
+    </div>
+    <div class="card">
+      <h2 data-i="paste">2 · Or paste an offer</h2>
+      <textarea id="free" data-ph="pasteph" placeholder="Broker email or listing. Nemotron extracts the facts; missing data is flagged, never invented."></textarea>
+      <div class="btns"><button class="btn ghost" id="extract" data-i="extract">Extract with Nemotron</button></div>
+      <pre id="exout" class="muted" style="display:none"></pre>
+    </div>
+    <div class="card">
+      <h2 data-i="sheet">3 · Offer file (editable)</h2>
+      <textarea id="json" style="min-height:260px"></textarea>
+      <div class="btns"><button class="btn" id="run" data-i="run">Evaluate</button>
+        <label class="muted" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="ai" checked> <span data-i="useai">AI red team</span></label>
+        <label class="muted" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="debt" checked> <span data-i="usedebt">Financing on</span></label></div>
+      <p class="muted" id="err"></p>
+    </div>
+  </section>
+  <section class="stack" id="out"><div class="card"><p class="muted" data-i="empty">Pick a demo case, then Evaluate.</p></div></section>
+</main>
+<script>
+const T={en:{},es:{title:"Negociador de terrenos",sub:"Cuánto pagar por la tierra y cómo pagarla: el criterio de 20 años de un desarrollador senior, vuelto ejecutable. Nemotron lee y discute; el código hace la cuenta.",demo:"Los datos de demo son ficticios.",cases:"1 · Casos de demo",paste:"2 · O pega una oferta",pasteph:"Correo del corredor o anuncio. Nemotron extrae los datos; lo que falta se señala, nunca se inventa.",extract:"Extraer con Nemotron",sheet:"3 · Ficha de la oferta (editable)",run:"Evaluar",useai:"Red team con IA",usedebt:"Con crédito",dev:"0 · Tesis del desarrollador",empty:"Elige un caso de demo y pulsa Evaluar."}};
+const $=id=>document.getElementById(id),lang=()=>$("lang").value;
+const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const safeUrl=u=>/^https?:\/\//.test(u||"")?esc(u):"#";
+const M=x=>x==null?"n/a":(x/1e6).toLocaleString(undefined,{maximumFractionDigits:1})+" M";
+function i18n(){const L=T[lang()];document.querySelectorAll("[data-i]").forEach(e=>{e._en??=e.innerHTML;e.innerHTML=L[e.dataset.i]??e._en});document.querySelectorAll("[data-ph]").forEach(e=>{e._en??=e.placeholder;e.placeholder=L[e.dataset.ph]??e._en})}
+$("lang").onchange=i18n;
+const DEV={};fetch("/api/developers").then(r=>r.json()).then(ds=>{const sel=$("dev");sel.innerHTML='<option value="">Auto (matches the offer\'s vocation)</option><option value="none">No thesis</option>'+ds.map(d=>{DEV[d.developer_id]=d;return `<option value="${esc(d.developer_id)}">${esc(d.name)}</option>`}).join("");sel.onchange=()=>{const d=DEV[sel.value];$("devtxt").textContent=d?`${d.vocation} · ${d.markets.join(", ")} · ${d.land_m2[0].toLocaleString()}–${d.land_m2[1].toLocaleString()} m² · max ${M(d.max_land_ticket)}`:"Each offer is first checked against the developer's line; offers that do not fit are discarded before any number is run."};sel.onchange()});
+fetch("/api/cases").then(r=>r.json()).then(cs=>{cs.forEach((c,i)=>{const b=document.createElement("button");b.className="chip";b.textContent=c.case_id;b.onclick=()=>{document.querySelectorAll(".chip").forEach(x=>x.classList.remove("on"));b.classList.add("on");$("json").value=JSON.stringify(c,null,1)};$("cases").append(b);if(i===0)b.click()})});
+$("extract").onclick=async()=>{$("exout").style.display="block";$("exout").textContent="…";const r=await fetch("/api/intake",{method:"POST",body:JSON.stringify({text:$("free").value})});$("exout").textContent=JSON.stringify(await r.json(),null,1)};
+$("run").onclick=async()=>{let offer;try{offer=JSON.parse($("json").value)}catch(e){$("err").textContent="JSON: "+e.message;return}$("err").textContent="";if(offer.params){offer.params.debt={...(offer.params.debt||{}),enabled:$("debt").checked}}
+ $("out").innerHTML='<div class="card muted">…</div>';
+ const r=await fetch("/api/evaluate",{method:"POST",body:JSON.stringify({offer,lang:lang(),use_ai:$("ai").checked,market:offer.market||"",developer_id:$("dev").value})});
+ const j=await r.json();if(j.error){$("out").innerHTML=`<div class="card warn">${esc(j.error)}</div>`;return}draw(j)};
+function cls(v){return v==="GO"?"GO":v==="BORDERLINE"?"BORDERLINE":(v.startsWith("NO-GO")||v==="NO FIT")?"NOGO":"NA"}
+function fitCard(r){const f=r.thesis_fit;if(!f||!f.applied)return"";return `<div class="card"><h2>Thesis fit · ${esc(f.thesis_id)} — ${f.fits?"fits":"does not fit"}</h2><div class="gates">${f.checks.map(c=>`<div class="gate"><span class="dot ${c.ok?"dg":"dr"}"></span><span>${esc(c.label)}</span></div>`).join("")}</div></div>`}
+const P=x=>x==null?"n/a":(x*100).toFixed(1)+"%";
+function metricsCard(r){const m=r.metrics_at_supported,p=r.protocol_result||{},f=p.financing||{};if(!m)return"";
+ return `<div class="card"><h2>At the maximum bid</h2><div class="kpis"><div class="kpi"><span>Equity IRR (target 20%)</span><b>${P(m.irr)}</b></div><div class="kpi"><span>Equity multiple${r.vocation==="residential_sale"&&f.enabled?" (min 2.0x)":""}</span><b>${m.multiple?m.multiple.toFixed(2)+"x":"n/a"}</b></div><div class="kpi"><span>Hurdle that binds</span><b style="font-size:14px">${esc(p.binding_hurdle||"IRR")}</b></div><div class="kpi"><span>Financing</span><b style="font-size:14px">${f.enabled?`${Math.round(f.ltc*100)}% of cost · peak ${M(f.peak_debt)}`:"off"}</b></div></div></div>`}
+function gateCard(r){const g=r.gates;const items=[];
+ g.kill_land.forEach(x=>items.push(["dr",x]));g.kill_vocation.forEach(x=>items.push(["dr",x]));g.open_risks.forEach(x=>items.push(["dy",x]));g.pending.forEach(x=>items.push(["dn",x]));
+ if(!items.length)items.push(["dg","Title, transfer, zoning, social and critical feasibilities clear."]);
+ return `<div class="card"><h2>Stage 0 · gates — ${esc(g.status)}</h2><div class="gates">${items.map(([c,t])=>`<div class="gate"><span class="dot ${c}"></span><span>${esc(t)}</span></div>`).join("")}</div></div>`}
+function valueCard(r){const vals=[[r.vocation==="residential_sale"&&(r.protocol_result||{}).min_multiple?"A · supported by the project (20% IRR + 2.0x)":"A · supported by the project (20% IRR pre-tax)",r.value_A_project,"var(--acc)"],["B · closed land comparables",r.value_B_comparables,"var(--acc2)"],["Maximum bid (lower of A, B)",r.max_bid,"var(--go)"]];
+ (r.scenarios||[]).forEach(s=>vals.push(["Scenario · "+s.name,s.max_bid,"var(--mid)"]));
+ const ask=r.asking_price;const mx=Math.max(...vals.map(v=>v[1]||0),ask||0)*1.05||1;
+ const bar=(n,v,c)=>`<span>${esc(n)}</span><div class="track"><div class="fill" style="width:${Math.max(0,(v||0)/mx*100)}%;background:${c}"></div>${ask?`<div class="mark" style="left:${ask/mx*100}%" title="asking"></div>`:""}</div><span class="num">${M(v)}</span>`;
+ return `<div class="card"><h2>Value · black line = asking price ${M(ask)}</h2><div class="bars">${vals.map(v=>bar(...v)).join("")}</div>
+ <ul class="muted">${(r.comparables_notes||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`}
+function structCard(r){const p=r.protocol_result||{};if(!("structure_value" in p)){if("yield_on_cost" in p){const b=p.breakdown;return `<div class="card"><h2>Rental lens · 12% target, exit cap, 20% IRR approves</h2><div class="kpis"><div class="kpi"><span>Yield on cost at asking</span><b>${P(p.yield_on_cost_at_asking)}</b></div><div class="kpi"><span>Exit cap · ${esc(b.exit_cap_source)}</span><b>${P(p.exit_cap)}</b></div><div class="kpi"><span>Lease-up (absorption)</span><b>${b.lease_up_months} months</b></div><div class="kpi"><span>Land at exactly 12%</span><b>${M(p.land_at_target_yield)}</b></div></div><p class="muted">${esc(p.note)}</p></div>`}return""}
+ const mx=Math.max(p.supported_land_value,p.supported_if_paid_cash_upfront)*1.05;
+ return `<div class="card"><h2>How you pay changes what you can pay</h2><div class="bars">
+ <span>100% cash upfront</span><div class="track"><div class="fill" style="width:${p.supported_if_paid_cash_upfront/mx*100}%;background:var(--line)"></div></div><span class="num">${M(p.supported_if_paid_cash_upfront)}</span>
+ <span>Deferred + in kind (proposed)</span><div class="track"><div class="fill" style="width:${p.supported_land_value/mx*100}%;background:var(--go)"></div></div><span class="num">${M(p.supported_land_value)}</span></div>
+ <p class="muted">Structure adds ${M(p.structure_value)} of supportable land value. In-kind units priced net of the saved sales commission.</p></div>`}
+function draw(j){const r=j.result;const v=r.verdict;let html=`<div class="card"><div class="verdict"><span class="badge ${cls(v)}">${esc(v)}</span><div><b>${esc(r.case_id)}</b> · ${esc(r.vocation)}<div class="muted">${esc(r.label||"")}</div></div></div><ul>${(r.reasons||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>${r.destination?`<p class="muted">Destination: ${esc(r.destination)}</p>`:""}</div>`;
+ html+=fitCard(r);if(v==="NO FIT"){$("out").innerHTML=html;return}html+=gateCard(r);
+ if(r.protocol){html+=`<div class="card"><h2>${esc(r.protocol.status)}</h2><ol>${r.protocol.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol><p class="muted">Evidence: ${esc(r.protocol.evidence)}</p></div>`}
+ else{html+=valueCard(r)+structCard(r)+metricsCard(r)}
+ const rt=j.red_team,rs=j.research;
+ if(rt)html+=`<div class="card"><h2>Red team · Nemotron Ultra</h2>${rt._mock?'<p class="warn">MOCK output (UI test)</p>':""}<p><b>Most fragile input:</b> ${esc(rt.fragile_input)}</p><p>${esc(rt.why)}</p><div class="split"><div><b>Ask the seller</b><ul>${(rt.questions_for_seller||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div><div><b>Site & DD checks</b><ul>${(rt.site_and_dd_checks||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div></div><p><b>Structure:</b> ${esc(rt.structure_proposal)}</p><p><b>Negotiation line:</b> “${esc(rt.negotiation_line)}”</p></div>`;
+ else if(!j.ai.enabled)html+=`<div class="card muted">AI review off (no API key or daily cap reached). Verdict above is fully deterministic.</div>`;
+ if(rs)html+=`<div class="card"><h2>Market context · Tavily</h2><p class="muted">${esc(rs.note||"")}</p><ul>${rs.results.map(x=>`<li><a href="${safeUrl(x.url)}" target="_blank" rel="noopener">${esc(x.title)}</a></li>`).join("")}</ul></div>`;
+ if(j.ai.error)html+=`<div class="card warn">AI step failed, deterministic verdict kept: ${esc(j.ai.error)}</div>`;
+ html+=`<div class="card"><details><summary>Investment memo (Markdown)</summary><pre>${esc(j.memo_md)}</pre></details></div>`;
+ $("out").innerHTML=html}
+i18n();
+</script>
+</body>
+</html>

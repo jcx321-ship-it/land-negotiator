@@ -1,0 +1,7 @@
+{"developer_id": "DEV-1", "name": "Developer 1 - residential for sale",
+ "label": "FICTITIOUS demo - invented developer and numbers, no real parcel, no client data",
+ "vocation": "residential_sale", "markets": ["CDMX", "Querétaro"], "land_m2": [1500, 12000],
+ "max_land_ticket": 60000000,
+ "product": {"structure": "mid_rise", "finish_level": "high", "amenities_cost_m2": 1500, "avg_unit_m2": 90,
+             "absorption_units_month": 3},
+ "never_buy": ["uncertain title", "zoning that must be changed", "material community opposition"]}
