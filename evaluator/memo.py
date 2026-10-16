@@ -56,11 +56,20 @@ def render(r: dict, lang: str = "en", narrative: str | None = None) -> str:
                     f"- {pr['note']}"]
         fin = pr.get("financing") or {}
         if fin.get("enabled"):
-            out += [f"- Financing on: {fin['ltc']:.0%} of development cost at {fin['rate']:.1%}, peak debt {_m(fin['peak_debt'])}, interest {_m(fin['interest'])}. Binding hurdle: {pr.get('binding_hurdle')}."]
+            out += [f"- Financing on: {fin['ltc']:.0%} of {fin.get('base', 'hard construction costs')} at {fin['rate']:.1%}, peak debt {_m(fin['peak_debt'])}, interest {_m(fin['interest'])}. Binding hurdle: {pr.get('binding_hurdle')}."]
         out += ["", f"### {L['metrics']}", f"- Equity IRR {m['irr']:.1%} · equity multiple {m['multiple']:.2f}x · peak equity {_m(m['peak_equity'])}"]
         if r.get("quick_tests"):
-            q = r["quick_tests"]["land_to_revenue_at_asking"]
-            out += [f"- Quick test land/revenue at asking: {q['ratio']:.1%} ({q['band']}). {q['note']}"]
+            qt = r["quick_tests"]
+            if "land_to_revenue_at_asking" in qt:
+                q = qt["land_to_revenue_at_asking"]
+                out += [f"- Quick test land/revenue at asking: {q['ratio']:.1%} ({q['band']}). {q['note']}"]
+            if "hard_cost_to_sales" in qt:
+                q = qt["hard_cost_to_sales"]
+                out += [f"- Quick test hard costs/sales: {q['ratio']:.1%} vs standard {q['standard']:.0%} ({q['band']})."]
+            if "proforma_at_max_bid" in qt:
+                sh = qt["proforma_at_max_bid"]["shares"]; st = qt["proforma_at_max_bid"]["standard"]
+                out += ["- Pro forma at max bid (% of sales, standard in brackets): " + " · ".join(
+                    f"{k.replace('_', ' ')} {sh[k]:.1%} [{st[k]:.0%}]" for k in st)]
     if r.get("destination"):
         out += ["", f"### {L['dest']}", f"- {r['destination']}"]
     if g["pending"]:

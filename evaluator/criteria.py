@@ -19,6 +19,13 @@ DECISION_PRETAX = True            # CONFIRMED: buy decision is taken before taxe
 
 # CONFIRMED quick test (sale destination only): land / revenue
 LAND_TO_REVENUE_BANDS = {"low": (0.05, 0.10), "reference": 0.20, "high": (0.20, 0.30)}
+# CONFIRMED (2026-10-16): standard hard costs are ~40% of the sales value. Together with the HISTORICAL
+# ~20% land / ~20% margin it closes the 20/40/20 quick test. A quick test, not a hurdle: the IRR approves.
+HARD_COST_TO_SALES_STANDARD = 0.40
+# CONFIRMED as the Founder's reference pro forma for for-sale projects (share of sales value, 2026-10-16).
+# Validated against public references: 20% profit on sales value is the usual residual-appraisal standard.
+PROFORMA_STANDARD = {"land": 0.20, "hard_costs": 0.40, "soft_and_sales_costs": 0.10, "finance": 0.05,
+                     "contingency_and_other": 0.05, "margin": 0.20}
 # HISTORICAL heuristic mentioned by the Founder, NOT a rule: ~20% land / ~40% costs / ~20% margin
 RULE_20_40_20 = {"land": 0.20, "costs": 0.40, "margin": 0.20}
 
@@ -36,6 +43,8 @@ RULES = [
     ("CONFIRMED", "Sensitivities come from market evidence and are used to find the negotiation space; no arbitrary fixed stress."),
     ("CONFIRMED", "Product: current zoning first, then the market validates price and pace; slow absorption lowers the land price, no absorption (stalled product nearby) = no market = discard."),
     ("CONFIRMED", "No closed comparables in the zone -> widen to another zone similar in use, level and type."),
+    ("CONFIRMED", "Bridge loan is lent on hard construction costs only; land and soft costs are equity."),
+    ("CONFIRMED", "Standard hard construction costs are about 40% of the sales value (quick test, not a hurdle)."),
     ("CONFIRMED", "For sale: value from the sales projection; approve at 20% equity IRR AND 2.0x equity multiple, usually with debt."),
     ("CONFIRMED", "Rental: value from rent and NOI; target 12% yield on total cost, exit at the signed buyer's cap or a speculative 10%; the 20% IRR approves."),
     ("CONFIRMED", "Forward sale (binding letter of intent with an institutional buyer) fixes the exit cap; seek a higher yield on cost to keep the margin."),

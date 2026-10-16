@@ -4,7 +4,7 @@ from __future__ import annotations
 import copy, statistics
 from .gates import run_gates
 from . import thesis as thesis_mod
-from .criteria import TARGET_IRR_PRETAX, LAND_TO_REVENUE_BANDS, IRR_BASIS
+from .criteria import HARD_COST_TO_SALES_STANDARD, PROFORMA_STANDARD, TARGET_IRR_PRETAX, LAND_TO_REVENUE_BANDS, IRR_BASIS
 from .protocols import residential_sale, rental, industrial_lots, partial
 from .protocols.base import summarize
 
@@ -101,7 +101,7 @@ def evaluate_offer(offer: dict, thesis: dict | None = None) -> dict:
                        + (" (meets it)." if y_ask >= tgt - 5e-4 else " (below it: the margin depends on the exit cap)."))
     fin = res.get("financing") or {}
     if fin.get("enabled"):
-        reasons.append(f"Financing on: {fin['ltc']:.0%} of development cost at {fin['rate']:.1%}; hurdle that binds: {res.get('binding_hurdle')}.")
+        reasons.append(f"Financing on: {fin['ltc']:.0%} of {fin.get('base', 'hard construction costs')} at {fin['rate']:.1%}; hurdle that binds: {res.get('binding_hurdle')}.")
     quick = {}
     if voc == "residential_sale" and asking:
         rev = res["breakdown"]["total_revenue_equiv"]
@@ -110,6 +110,28 @@ def evaluate_offer(offer: dict, thesis: dict | None = None) -> dict:
         band = "low" if ratio <= lo[1] else ("reference" if ratio <= hi[0] else ("high" if ratio <= hi[1] else "above the observed range"))
         quick["land_to_revenue_at_asking"] = dict(ratio=ratio, band=band,
             note="Quick test only (Founder): admissible % rises in expensive high-demand areas, falls in cheap abundant product.")
+    bd = res.get("breakdown") or {}
+    sales = bd.get("total_revenue_equiv") or bd.get("exit_value")
+    if sales and bd.get("hard_with_contingency"):
+        hr = bd["hard_with_contingency"] / sales
+        std = HARD_COST_TO_SALES_STANDARD
+        quick["hard_cost_to_sales"] = dict(ratio=hr, standard=std,
+            band="standard" if hr <= std + 0.05 else ("above standard" if hr <= std + 0.15 else "costly"),
+            note="Quick test (Founder): standard hard costs are ~40% of the sales value. Above it, check the "
+                 "specification or whether the sale price is too low for the product.")
+    if voc == "residential_sale" and bd.get("total_revenue_equiv"):
+        rev = bd["total_revenue_equiv"]; c = 1 + bd.get("contingency", 0.05)
+        land = res["supported_land_value"]
+        hard = bd["hard_with_contingency"] / c; soft = bd["soft_with_contingency"] / c
+        cont = bd["hard_with_contingency"] + bd["soft_with_contingency"] - hard - soft
+        fin_i = (res.get("financing") or {}).get("interest", 0.0)
+        shares = dict(land=land, hard_costs=hard, soft_and_sales_costs=soft + bd["variable_costs"], finance=fin_i,
+                      contingency_and_other=cont)
+        shares = {k: v / rev for k, v in shares.items()}
+        shares["margin"] = 1 - sum(shares.values())
+        quick["proforma_at_max_bid"] = dict(shares=shares, standard=PROFORMA_STANDARD,
+            note="Founder's reference: land 20 / hard 40 / soft+sales 10 / finance 5 / contingency 5 / margin 20 "
+                 "(share of sales value). The margin is not the hurdle: the 20% IRR and 2.0x approve.")
     destination = None
     if offer.get("irreplaceable") is True:
         destination = "Irreplaceable / premium: evaluate keeping it as a rental asset (Founder rule)."
