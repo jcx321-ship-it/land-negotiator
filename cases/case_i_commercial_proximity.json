@@ -1,0 +1,83 @@
+{
+ "case_id": "I-commercial-proximity",
+ "label": "FICTITIOUS demo case - invented numbers, no real parcel, no client data",
+ "vocation": "commercial",
+ "asking_price": 30000000,
+ "market": "Querétaro",
+ "segment": "proximity centre (pharmacy anchor, clinics, convenience)",
+ "dd": {
+  "title_certain": true,
+  "seller_can_transfer": true,
+  "social_opposition_material": false,
+  "protected_area_incompatible": false,
+  "nonremediable_physical": false,
+  "current_zoning_allows_product": true,
+  "critical_feasibility": "accredited",
+  "access_visibility": true,
+  "frontage_ok": true,
+  "parking_feasible": true,
+  "use_restriction": false,
+  "oversupply_proven": false,
+  "demand_pays": true
+ },
+ "params": {
+  "land_area_m2": 6000,
+  "far": 0.6,
+  "frontage_m": 65,
+  "parking_spaces": 110,
+  "hard_cost_m2": 11500,
+  "rent_m2_month": 380,
+  "leases_per_month": 3,
+  "user_identified": true,
+  "loi_binding": false,
+  "tenant_rating": "AAA",
+  "lease_years": 15,
+  "committed_cap": 0.095,
+  "zone_vacancy": 0.06,
+  "land_structure": {
+   "upfront_pct": 0.3,
+   "deferred": [
+    {
+     "month": 12,
+     "pct": 0.7
+    }
+   ],
+   "acq_cost_pct": 0.06
+  }
+ },
+ "comparables": [
+  {
+   "price_m2": 6500,
+   "closed": true,
+   "note": "closed 2025, commercial corridor"
+  },
+  {
+   "price_m2": 7200,
+   "closed": true
+  }
+ ],
+ "scenarios": [
+  {
+   "name": "Anchor signs the binding LOI (AAA, 15 years, 9.5% cap)",
+   "evidence": "pharmacy chain LOI in negotiation",
+   "overrides": {
+    "loi_binding": true
+   }
+  },
+  {
+   "name": "Exit by selling rental units to small investors (10% cap)",
+   "evidence": "recent unit sales in comparable centres",
+   "overrides": {
+    "exit_route": "unit_sale",
+    "unit_sale_cap": 0.1
+   }
+  },
+  {
+   "name": "Achieved rent -10%",
+   "evidence": "two recent leases below asking",
+   "overrides": {
+    "rent_m2_month": 342
+   }
+  }
+ ]
+}
