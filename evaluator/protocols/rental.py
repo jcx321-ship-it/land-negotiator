@@ -69,7 +69,8 @@ def evaluate(p: dict) -> dict:
     from ..debt import DEFAULT_DEBT
     debt = {**DEFAULT_DEBT, **(p.get("debt") or {})}
     debt.setdefault("cap_amount", debt["max_pct_of_sales"] * bd["exit_value"])
-    sol = solve_with_hurdles(flows_lin, dev, debt, min_multiple=None)
+    from ..criteria import TARGET_IRR_PRETAX
+    sol = solve_with_hurdles(flows_lin, dev, debt, target_irr=p.get("target_irr", TARGET_IRR_PRETAX), min_multiple=None)
     P = sol["P"]
     total_cost = P + bd["hard_with_contingency"] + bd["soft_with_contingency"]
     yoc = bd["stabilized_noi_year"] / total_cost if total_cost > 0 else None
