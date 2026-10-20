@@ -2,7 +2,17 @@
 from __future__ import annotations
 
 
-def run_gates(dd: dict) -> dict:
+COMMERCIAL_KILLS = [  # CONFIRMED (Founder, 2026-10-19): kill THIS product/format, not necessarily the land
+    ("access_visibility", False, "No access or visibility from the main road (frontage, turn, U-turn) for this format."),
+    ("frontage_ok", False, "Frontage too short or plot too deep for this format."),
+    ("parking_feasible", False, "Parking that meets code and operation cannot be provided."),
+    ("use_restriction", True, "Use restriction for this line of business (distances, permits, licences)."),
+    ("oversupply_proven", True, "Proven oversupply: comparable centres nearby with high vacancy."),
+    ("demand_pays", False, "Demand that cannot pay: area income does not support the rents the project needs."),
+]
+
+
+def run_gates(dd: dict, vocation: str | None = None) -> dict:
     """dd keys (True/False/None=unknown):
     title_certain, seller_can_transfer, social_opposition_material, protected_area_incompatible,
     nonremediable_physical, current_zoning_allows_product, market_absorbs,
@@ -28,6 +38,12 @@ def run_gates(dd: dict) -> dict:
     unknown("current_zoning_allows_product", "Current land-use certificate not verified.")
     if dd.get("market_absorbs") is False:
         kill_vocation.append("No market: comparable product nearby is stalled, so this product is discarded (slow is fine, stalled is not).")
+    if vocation == "commercial":
+        for key, bad, label in COMMERCIAL_KILLS:
+            if dd.get(key) is bad:
+                kill_vocation.append(label)
+            elif dd.get(key) is None:
+                pending.append("Not yet verified: " + label.split(":")[0].rstrip(".").lower() + ".")
     feas = dd.get("critical_feasibility")
     if feas == "not_viable":
         kill_vocation.append("A critical feasibility (energy, water, access) has no viable solution for this product.")

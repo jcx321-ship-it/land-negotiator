@@ -54,6 +54,10 @@ def render(r: dict, lang: str = "en", narrative: str | None = None) -> str:
             out += ["", f"- Yield on total cost {pr['yield_on_cost']:.1%} (target {pr['target_yield_on_cost']:.0%}) vs exit cap {pr['exit_cap']:.1%} ({bd['exit_cap_source']}); spread {pr['development_spread']:.1%}.",
                     f"- Lease-up {bd['lease_up_months']} months (market absorption), sale at month {bd['sale_month']}. Land that would deliver exactly {pr['target_yield_on_cost']:.0%}: {_m(pr['land_at_target_yield'])}.",
                     f"- {pr['note']}"]
+        if pr.get("risk_factors"):
+            out += ["", "### Risk factors (evidence, not automatic adjustments)",
+                    *[f"- {x['factor']}: required return {x['direction']} · {x['evidence']}" for x in pr["risk_factors"]],
+                    f"- Exit route: {pr['breakdown']['exit_route']} ({pr['breakdown']['exit_cap_source']}). Target IRR {pr['target_irr']:.0%} (investor's)."]
         fin = pr.get("financing") or {}
         if fin.get("enabled"):
             out += [f"- Financing on: {fin['ltc']:.0%} of {fin.get('base', 'hard construction costs')} at {fin['rate']:.1%}, peak debt {_m(fin['peak_debt'])}, interest {_m(fin['interest'])}. Binding hurdle: {pr.get('binding_hurdle')}."]

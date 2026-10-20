@@ -5,10 +5,11 @@ import copy, statistics
 from .gates import run_gates
 from . import thesis as thesis_mod
 from .criteria import HARD_COST_TO_SALES_STANDARD, PROFORMA_STANDARD, TARGET_IRR_PRETAX, LAND_TO_REVENUE_BANDS, IRR_BASIS
-from .protocols import residential_sale, rental, industrial_lots, partial
+from .protocols import residential_sale, rental, industrial_lots, partial, commercial
 from .protocols.base import summarize
 
-PRICED = {"residential_sale": residential_sale, "rental": rental, "industrial_lots": industrial_lots}
+PRICED = {"residential_sale": residential_sale, "rental": rental, "industrial_lots": industrial_lots,
+          "commercial": commercial}
 
 
 def _deep_merge(a: dict, b: dict) -> dict:
@@ -34,7 +35,10 @@ def evaluate_offer(offer: dict, thesis: dict | None = None) -> dict:
     voc = offer["vocation"]
     fit = thesis_mod.fit(offer, thesis)
     offer = thesis_mod.apply_product(offer, thesis)
-    gates = run_gates(offer.get("dd", {}))
+    gates = run_gates(offer.get("dd", {}), voc)
+    gates["pending"] += fit.get("missing_evidence", [])
+    if gates["pending"] and gates["status"] == "PASS":
+        gates["status"] = "PASS - DD pending"
     out = dict(case_id=offer.get("case_id"), label=offer.get("label"), vocation=voc, market=offer.get("market"),
                thesis_fit=fit, gates=gates, target_irr=TARGET_IRR_PRETAX, irr_basis=IRR_BASIS,
                asking_price=offer.get("asking_price"))
@@ -73,7 +77,7 @@ def evaluate_offer(offer: dict, thesis: dict | None = None) -> dict:
         verdict = "NO ASKING PRICE"
     elif asking <= max_bid and not gates["open_risks"]:
         verdict = "GO"
-        hurd = f"{TARGET_IRR_PRETAX:.0%} pre-tax IRR" + (" and 2.0x equity multiple" if res.get("min_multiple") else "")
+        hurd = f"{res.get('target_irr', TARGET_IRR_PRETAX):.0%} pre-tax IRR" + (" (investor's target)" if res.get("target_irr", TARGET_IRR_PRETAX) != TARGET_IRR_PRETAX else "") + (" and 2.0x equity multiple" if res.get("min_multiple") else "")
         reasons.append(f"Asking price fits under the maximum bid ({binding} binds) at {hurd}.")
     elif asking <= max_bid:
         verdict = "BORDERLINE"
@@ -85,6 +89,8 @@ def evaluate_offer(offer: dict, thesis: dict | None = None) -> dict:
         if asking <= best:
             verdict = "BORDERLINE"
             reasons.append(f"Asking exceeds the base maximum bid by {gap:.0%}; only the most favourable market scenario supports it: negotiate or restructure.")
+            ok = [x["name"] for x in scen if x["max_bid"] >= asking]
+            reasons.append("Supported only if: " + "; ".join(ok) + ". Do not pay the asking price before that is secured.")
         else:
             verdict = "NO-GO"
             reasons.append(f"Asking exceeds the maximum bid by {gap:.0%} and no market scenario supports it.")
@@ -92,7 +98,9 @@ def evaluate_offer(offer: dict, thesis: dict | None = None) -> dict:
         reasons += gates["open_risks"]
     if res.get("structure_value", 0) > 0 and not verdict.startswith("NO-GO (land"):
         reasons.append(f"Deferral / payment in kind adds {res['structure_value']:,.0f} of supportable land value vs. paying cash upfront.")
-    if voc == "rental" and asking and not verdict.startswith("NO-GO (land"):
+    if voc == "commercial" and not verdict.startswith("NO-GO (land"):
+        reasons.append(f"User status: {res['user_status']}.")
+    if voc in ("rental", "commercial") and asking and not verdict.startswith("NO-GO (land"):
         bd = res["breakdown"]
         y_ask = bd["stabilized_noi_year"] / (asking + bd["hard_with_contingency"] + bd["soft_with_contingency"])
         res["yield_on_cost_at_asking"] = y_ask

@@ -19,7 +19,19 @@ def fit(offer: dict, thesis: dict | None) -> dict:
         chk(lo <= area <= hi, f"Land {area:,.0f} m2 vs range {lo:,.0f}-{hi:,.0f} m2")
     if thesis.get("max_land_ticket") and offer.get("asking_price"):
         chk(offer["asking_price"] <= thesis["max_land_ticket"], f"Ticket {offer['asking_price']:,.0f} vs max {thesis['max_land_ticket']:,.0f}")
-    return dict(fits=all(c["ok"] for c in checks), checks=checks, applied=True, thesis_id=thesis.get("developer_id"))
+    # line-of-business requirements come from the developer, who knows his format (Founder, 2026-10-19)
+    missing = []
+    params = offer.get("params") or {}
+    for key, req in (thesis.get("requirements") or {}).items():
+        field, op = (key[4:], "min") if key.startswith("min_") else ((key[4:], "max") if key.startswith("max_") else (key, "eq"))
+        val = params.get(field, offer.get(field))
+        if val is None:
+            missing.append(f"Format requirement not evidenced yet: {field} ({op} {req}).")
+            continue
+        ok = val >= req if op == "min" else (val <= req if op == "max" else val == req)
+        chk(ok, f"{field} {val:,} vs {op} {req:,}" if isinstance(val, (int, float)) else f"{field} {val} vs {req}")
+    return dict(fits=all(c["ok"] for c in checks), checks=checks, applied=True, thesis_id=thesis.get("developer_id"),
+                missing_evidence=missing)
 
 
 def apply_product(offer: dict, thesis: dict | None) -> dict:
