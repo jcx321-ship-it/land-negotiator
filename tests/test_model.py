@@ -10,7 +10,7 @@ HERE = os.path.dirname(__file__)
 def case(name): return json.load(open(os.path.join(HERE, "..", "cases", name), encoding="utf-8"))
 def dev(name): return json.load(open(os.path.join(HERE, "..", "developers", name), encoding="utf-8"))
 THESES = {"residential_sale": dev("dev1_residential.json"), "industrial_lots": dev("dev2_industrial.json"),
-          "rental": dev("dev3_rental.json")}
+          "rental": dev("dev3_rental.json"), "commercial": dev("dev4_commercial.json")}
 
 
 class Verdicts(unittest.TestCase):
@@ -18,7 +18,8 @@ class Verdicts(unittest.TestCase):
         exp = {"case_a_residential_go.json": "GO", "case_b_residential_no_go.json": "NO-GO",
                "case_c_residential_borderline.json": "BORDERLINE", "case_d_rental_premium.json": "GO",
                "case_e_industrial_lots.json": "GO", "case_f_land_banking.json": "NO AUTOMATIC VERDICT",
-               "case_g_title_kill.json": "NO-GO (land)", "case_h_no_fit.json": "NO FIT"}
+               "case_g_title_kill.json": "NO-GO (land)", "case_h_no_fit.json": "NO FIT",
+               "case_i_commercial_proximity.json": "BORDERLINE"}
         for f, v in exp.items():
             c = case(f)
             self.assertEqual(evaluate_offer(c, THESES.get(c["vocation"]))["verdict"], v, f)
@@ -88,3 +89,36 @@ class FounderRules(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Commercial(unittest.TestCase):
+    def test_only_binding_loi_identifies_the_user(self):
+        from evaluator.protocols import commercial
+        p = case("case_i_commercial_proximity.json")["params"]
+        spec = commercial.evaluate(p)
+        loi = commercial.evaluate({**p, "loi_binding": True})
+        self.assertFalse(spec["user_identified"])
+        self.assertTrue(loi["user_identified"])
+        self.assertGreater(loi["supported_land_value"], spec["supported_land_value"])
+        self.assertAlmostEqual(spec["exit_cap"], 0.12)
+
+    def test_investor_target_irr_changes_land_value(self):
+        from evaluator.protocols import commercial
+        p = case("case_i_commercial_proximity.json")["params"]
+        self.assertGreater(commercial.evaluate({**p, "target_irr": 0.15})["supported_land_value"],
+                           commercial.evaluate({**p, "target_irr": 0.20})["supported_land_value"])
+
+    def test_format_gates_kill_the_product(self):
+        g = run_gates({"title_certain": True, "seller_can_transfer": True, "access_visibility": False}, "commercial")
+        self.assertEqual(g["status"], "NO-GO (this vocation)")
+
+    def test_risk_factors_are_evidence_not_numbers(self):
+        from evaluator.protocols import commercial
+        rf = commercial.evaluate(case("case_i_commercial_proximity.json")["params"])["risk_factors"]
+        self.assertTrue(all(set(x) == {"factor", "direction", "evidence"} for x in rf))
+
+    def test_exit_routes(self):
+        from evaluator.protocols import commercial
+        p = case("case_i_commercial_proximity.json")["params"]
+        for route in ("stabilized_sale", "unit_sale", "hold"):
+            self.assertIsNotNone(commercial.evaluate({**p, "exit_route": route})["supported_land_value"])
