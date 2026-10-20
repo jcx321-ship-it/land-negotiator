@@ -1,0 +1,7 @@
+{"developer_id": "DEV-4", "name": "Developer 4 - proximity retail & services centres",
+ "label": "FICTITIOUS demo - invented developer and numbers, no real parcel, no client data",
+ "vocation": "commercial", "markets": ["Querétaro", "Monterrey"], "land_m2": [2500, 12000],
+ "max_land_ticket": 60000000,
+ "requirements": {"min_frontage_m": 40, "min_parking_spaces": 80},
+ "product": {"avg_unit_m2": 120, "target_irr": 0.20},
+ "never_buy": ["uncertain title", "no access or visibility", "proven oversupply"]}
