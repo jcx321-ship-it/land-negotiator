@@ -36,6 +36,12 @@ Cost comes from the specification (structure + finishes + amenities), not from t
 Contingency is 5% per cost block. Decisions are pre-tax. Financing is a switch; the bridge loan funds the construction
 budget (hard costs), capped at 65% of the sales value (public bank terms). Quick tests: hard costs ~40% of sales value, land ~20% (never hurdles: the IRR approves).
 
+Commercial & services follows its own route: demand of the area -> user -> format -> norm -> market -> value.
+A user counts as identified only with a binding letter of intent; the investor sets the target IRR; risk factors
+(tenant credit, lease term, pre-let, location, vacancy) are shown with their evidence, never as automatic adjustments;
+three exits (stabilized sale, sale of rental units to small investors, hold). Format kills (access, frontage,
+parking, use restrictions, oversupply, demand that cannot pay) kill the product, not necessarily the land.
+
 ## The AI part (Nebius Token Factory + NVIDIA Nemotron)
 | Step | Model | Role |
 |---|---|---|
@@ -56,12 +62,13 @@ closest Nemotron and retries.
 | DEV-1 | G | NO-GO (land) | Uncertain title kills the land before any math |
 | DEV-1 | H | NO FIT | Wrong market and size for this developer: discarded in one step |
 | DEV-3 build-to-rent | D | GO | Forward sale at an 8.5% cap supports 63.4 M; without a signed buyer (speculative 10%) only 31.6 M |
+| DEV-4 commercial | I | BORDERLINE | Proximity centre with an AAA anchor in talks: speculative (12% standard exit cap) supports 20.8 M against 30 M asked; only a **binding** LOI (9.5% cap) supports it (35.8 M), so the land is not paid before it is signed. Risk factors are listed as evidence, never as automatic % |
 | DEV-2 industrial | E | GO | Net area after easements, lot types with different absorption, open infrastructure |
 | — | F | No automatic verdict | Land banking: partial protocol, checklist, no invented price |
 
 ## Run
 ```bash
-python3 -m unittest discover -s tests                     # 14 tests
+python3 -m unittest discover -s tests                     # 19 tests
 python3 -m evaluator.cli cases/case_c_residential_borderline.json --thesis developers/dev1_residential.json --lang es
 export NEBIUS_API_KEY=...  TAVILY_API_KEY=...             # optional AI steps
 python3 server.py                                          # http://localhost:7860
