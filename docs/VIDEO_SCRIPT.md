@@ -1,15 +1,15 @@
-# Demo video script (under 3:00, English)
+# Demo video script (under 3:00, English, on-screen captions, no voice required)
 
-Screen recording of the live demo. Voice-over can be the founder or a generated voice. Numbers are the fictitious demo cases.
+Screen recording of the live demo (land-negotiator.vercel.app). All numbers are the fictitious demo cases.
 
-| Time | On screen | Voice-over |
+| Time | On screen | Caption |
 |---|---|---|
-| 0:00-0:15 | Title card "Land Negotiator", then the app | "In Mexico, the price you agree for land today decides your margin for the next three years. This is how a developer with twenty years of land deals decides how much to pay, and how to pay it, turned into software." |
-| 0:15-0:30 | Developer thesis selector; case H | "It starts with the developer's own line. This offer is in the wrong city and too small, so it is discarded before any math. No wasted due diligence." |
-| 0:30-0:50 | Paste a broker email, click "Extract with Nemotron" | "Offers arrive as messy emails. Nemotron on Nebius Token Factory reads them into an offer file and flags what is missing. It never invents a number." |
-| 0:50-1:20 | Case A: GO, value chart | "Then deterministic code does the math. Current zoning only. The land price is solved so the project still returns twenty percent IRR and two times the equity, with financing on. The maximum bid is the lower of what the project supports and what similar land actually sold for. Asking prices don't count." |
-| 1:20-1:35 | "How you pay changes what you can pay" bars | "Payment structure matters: paying in cash supports 21 million; deferring and paying with apartments supports 27.5." |
-| 1:35-1:55 | Case C: BORDERLINE, scenarios | "Here the seller asks 28.5. Only the optimistic market scenario covers it, and a utility permit is still open. Verdict: borderline, negotiate or restructure." |
-| 1:55-2:20 | Red team card (Nemotron Ultra) | "Nemotron Ultra plays devil's advocate: the most fragile input, questions for the seller, site checks, a payment structure that keeps capital safe until the permit lands, and a negotiation line. It argues; it never changes the verdict." |
-| 2:20-2:40 | Case D: rental, forward sale vs speculative | "For rental, the same land is worth 58 million with a signed institutional buyer at 8.5 percent, and only 26 without one. That is the negotiation." |
-| 2:40-2:55 | Architecture slide | "Every rule is tagged: confirmed by the developer, seen in past deals, or still a hypothesis. Nemotron reads and argues; code does the math. Demo data is fictitious." |
+| 0:00-0:12 | Title card, then the app | "The land price agreed today decides a developer's margin for three years. This is a 20-year land criterion, turned into software." |
+| 0:12-0:25 | Thesis selector; case H | "Step 1: is the offer in the developer's line? Wrong city, too small: discarded before any math." |
+| 0:25-0:45 | Paste broker email, "Extract with Nemotron" | "Offers arrive as messy emails. Nemotron on Nebius Token Factory reads them into an offer file and flags what is missing. It never invents a number." |
+| 0:45-1:10 | Case A: GO, value chart, pro forma | "Deterministic code does the math: land price solved for 20% equity IRR and 2.0x, bridge loan on hard costs. Max bid = lower of project value (57.2 M) and closed comparables (56.2 M). Asking: 46 M → GO." |
+| 1:10-1:22 | Payment-structure bars | "How you pay changes what you can pay: 48.6 M all cash upfront vs 57.2 M with deferral and payment in apartments." |
+| 1:22-1:40 | Case C: BORDERLINE | "Seller asks 54 M; the price fits (max 55 M), but a critical feasibility item is still open. Borderline: tie payments to its accreditation before exposing capital." |
+| 1:40-2:10 | Case I: commercial lens, red team | "Commercial: demand first. Speculative, the land is worth 20.8 M; with a binding LOI from the AAA anchor, 35.8 M. Nemotron Ultra flags the LOI as the most fragile input and writes the questions for the seller." |
+| 2:10-2:30 | Case D: rental | "Build-to-rent: 63.4 M with a signed institutional buyer, 31.6 M without one. That is the negotiation." |
+| 2:30-2:50 | Architecture / provenance slide | "Every rule is tagged confirmed, historical or hypothesis. Nemotron reads and argues; code computes. Demo data is fictitious." |
