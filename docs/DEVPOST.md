@@ -26,13 +26,13 @@ Land Negotiator takes a land offer and returns a committee-ready answer:
 - **Nebius Token Factory** (OpenAI-compatible API) with **NVIDIA Nemotron**: a Nemotron model for intake (broker email to structured offer, with a guard that drops invented numbers) and Nemotron Ultra as the red team. Models receive the rules and the computed result; they never compute numbers or set the verdict.
 - Optional Tavily search for market context, shown as context only, never as a comparable.
 - The criterion came from structured interviews with a developer, contrasted with public references; every rule carries its provenance (confirmed, historical, hypothesis).
-- Vercel Python functions for the public demo; 19 automated tests.
+- Vercel Python functions for the public demo; 20 automated tests.
 
 ## Challenges
 Turning tacit judgement into rules without inventing any: when the developer had not stated a rule, the tool says so instead of guessing. Keeping the LLM out of the math while making it useful. Reasoning models returning thoughts instead of JSON: solved with a robust parser and a per-request call guard. Reconciling simple rules (20% IRR, 2.0x, 12% yield, a bridge loan on hard costs) inside one solver.
 
 ## Accomplishments
-Nine end-to-end demo cases across four developer theses, 19 tests, every number reproducible, an English/Spanish interface, and an AI layer that improves the negotiation without touching the verdict. In the commercial demo, Nemotron Ultra singled out the anchor tenant's letter of intent as the most fragile input; the engine shows the same land is worth 20.8 M speculative and 35.8 M with a binding LOI.
+Nine end-to-end demo cases across four developer theses, 20 tests, every number reproducible, a full English/Spanish interface (results included), and an AI layer that improves the negotiation without touching the verdict. In the commercial demo, Nemotron Ultra singled out the anchor tenant's letter of intent as the most fragile input; the engine shows the same land is worth 20.8 M speculative and 35.8 M with a binding LOI.
 
 ## What we learned
 In land, the payment structure matters as much as the price, and a signed user or buyer can change what the land is worth by more than half. The most valuable AI output was not a number: it was the right question to ask the seller.
