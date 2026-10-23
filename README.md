@@ -1,9 +1,13 @@
 # Land Negotiator
 
-**How much to pay for land, and how to pay it.** A senior Mexican developer's 20-year land-buying criterion,
-made executable. Paste an offer; get the thesis fit, the kill gates, the maximum bid, how the payment
-structure changes it, market scenarios for the negotiation, and an AI red team that attacks the inputs
-before you sign.
+**How much to pay for land, and how to pay it.** Paste a broker's land offer. **NVIDIA Nemotron** (served on
+**Nebius Token Factory**) reads it into a structured offer, then plays **red team**: it attacks the deal's weakest
+assumption, writes the questions to ask the seller and proposes a payment structure that keeps capital safe.
+Deterministic code, encoding a senior Mexican developer's 20-year criterion, computes the maximum bid. The AI argues;
+it never sets the number or the verdict.
+
+**Try it in 30 seconds:** open the [live demo](https://land-negotiator.vercel.app), case I is preloaded, press
+**Evaluate** with "AI red team" on. English and Spanish.
 
 > All demo data is **fictitious**: invented developers, numbers and parcels. No client data.
 
@@ -48,6 +52,11 @@ parking, use restrictions, oversupply, demand that cannot pay) kill the product,
 | Intake | Nemotron Super (`nvidia/nemotron-3-super-120b-a12b`) | Reads a broker email into an offer file; flags missing data, never invents it |
 | Red team | Nemotron Ultra (`nvidia/Nemotron-3-Ultra-550b-a55b`) | Gets the buyer's rules and the deterministic result; returns the most fragile input, seller questions, DD checks, a payment structure that keeps capital unexposed while risks are open, and a negotiation line |
 | Market context | Tavily search | Listings shown as context only; they never enter value B |
+
+**Where Token Factory accelerated the work.** One OpenAI-compatible endpoint gave us two Nemotron sizes with the
+same small stdlib client (`evaluator/llm.py`, no SDK): a fast model for intake and the 550B Ultra for the red team, swapped by changing a
+model id. `/v1/models` lets the app discover served ids at runtime, so no SDK, GPU or model hosting was needed and
+the whole AI layer runs inside a free Vercel function.
 
 **The model never does the math and never sets the verdict.** If an AI step fails, the deterministic
 verdict stands. If a model id is not served, the app asks Token Factory's `/models` endpoint for the
