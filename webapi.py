@@ -64,6 +64,9 @@ def post(path: str, req: dict):
                             thesis=thesis_for(req["offer"], req.get("developer_id")))
             out = json.loads(json.dumps(out, default=str))
             out["ai"]["cap_left"] = max(0, DAILY_AI_CAP - _state["ai_used"])
+            if lang == "es":
+                from evaluator.i18n_es import translate
+                out["result"] = translate(out["result"])
             return 200, out
         return 404, {"error": "not found"}
     except (KeyError, ValueError, TypeError) as e:
