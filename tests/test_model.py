@@ -122,3 +122,16 @@ class Commercial(unittest.TestCase):
         p = case("case_i_commercial_proximity.json")["params"]
         for route in ("stabilized_sale", "unit_sale", "hold"):
             self.assertIsNotNone(commercial.evaluate({**p, "exit_route": route})["supported_land_value"])
+
+
+class Spanish(unittest.TestCase):
+    def test_spanish_view_translates_reasons_but_not_verdicts(self):
+        import webapi
+        for f in ("case_a_residential_go.json", "case_i_commercial_proximity.json", "case_h_no_fit.json"):
+            code, r = webapi.post("/api/evaluate", {"offer": case(f), "lang": "es", "use_ai": False})
+            _, en = webapi.post("/api/evaluate", {"offer": case(f), "lang": "en", "use_ai": False})
+            res, ref = r["result"], en["result"]
+            self.assertEqual(res["verdict"], ref["verdict"])
+            self.assertEqual(res.get("max_bid"), ref.get("max_bid"))
+            for es_line, en_line in zip(res["reasons"], ref["reasons"]):
+                self.assertNotEqual(es_line, en_line)
