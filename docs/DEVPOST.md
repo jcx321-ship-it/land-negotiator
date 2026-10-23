@@ -8,18 +8,19 @@
 In Mexico and Latin America, land offers arrive as WhatsApp messages and broker emails and are answered by intuition or by spreadsheets with hidden assumptions. The land price agreed on day one decides the margin of a three-year project. Experienced developers carry a precise criterion in their heads; junior teams and investors do not.
 
 ## What it does
-Land Negotiator takes a land offer and returns a committee-ready answer:
-- **Thesis fit**: is the offer in the developer's line (vocation, market, land size, ticket, format requirements)? If not, it is discarded before any math.
-- **Kill gates**: uncertain title kills the land; current zoning, physical limits, utilities, a stalled market or (for retail) access, visibility, frontage and parking kill only that product.
-- **Maximum bid**: the land price is solved so the project still meets the investor's hurdles, with a bridge loan on hard construction costs:
-  - *For sale*: 20% equity IRR and 2.0x equity multiple, plus quick sanity tests (hard costs about 40% of sales; a 20/40/10/5/5/20 pro forma).
-  - *Build-to-rent*: 12% yield-on-cost target, exit at the signed buyer's cap or a speculative cap.
-  - *Commercial & services*: demand first; a user only counts as identified with a binding letter of intent; three exit routes (stabilized sale, sale of rental units to small investors, hold); risk factors shown as evidence, never as automatic percentages; the investor sets the target IRR.
-  - *Industrial lots*; partial checklists where the criterion is not complete, so no price is invented.
-  The bid is the lower of the project value and closed land comparables (asking prices are ignored).
-- **Payment structure**: shows how deferral and payment in kind raise what the buyer can pay.
-- **Negotiation space**: market-evidence scenarios; a borderline verdict says exactly which scenario must be secured before paying the asking price.
-- **AI red team**: NVIDIA Nemotron attacks the inputs, writes the questions for the seller and the due-diligence checks, proposes a structure that keeps capital unexposed and drafts a negotiation line.
+A broker emails a land offer. Land Negotiator turns it into a committee-ready negotiation in under a minute:
+1. **Nemotron reads the email** (Nebius Token Factory) into a structured offer and flags what is missing. It never invents a number.
+2. **Deterministic code decides**: thesis fit (is it in the developer's line?), kill gates (title, zoning, utilities, market), and the **maximum bid**: the land price solved so the project still meets the investor's hurdles (20% equity IRR and 2.0x for sale, 12% yield-on-cost for rent, the investor's own target for commercial), with a bridge loan on hard costs, capped by closed land comparables.
+3. **Nemotron Ultra plays red team**: it attacks the most fragile assumption, writes the questions for the seller and the due-diligence checks, proposes a payment structure that keeps capital unexposed, and drafts a negotiation line. It argues; it never changes the number or the verdict.
+4. The buyer sees **how payment structure changes price** (deferral and payment in kind) and **market-evidence scenarios**; a borderline verdict says exactly what must be secured before paying the asking price.
+
+Example (fictitious): a commercial lot asked at 30 M supports 20.8 M speculative and 35.8 M only with the anchor's binding letter of intent. Nemotron Ultra singled out that letter as the weakest point and proposed paying in tranches tied to its signature.
+
+## How it meets the judging criteria
+- **Technological implementation**: two Nemotron roles on Token Factory (intake and red team) behind a stdlib client; model ids resolved at runtime; robust handling of reasoning-model output; a deterministic engine with monthly cash flows, IRR, a capped bridge-loan solver and one protocol per land vocation; 20 automated tests; spend guards for a public demo.
+- **Design**: a complete flow from broker email to negotiation memo, in English and Spanish, on desktop and mobile; case I is preloaded so a judge sees the red team in one click.
+- **Potential impact**: land in Mexico and Latin America is priced by intuition or hidden spreadsheets, and the price agreed on day one decides a three-year project's margin. The tool gives junior teams and investors a senior developer's criterion and the right questions before they sign.
+- **Quality of the idea**: the LLM is used as an adversarial critic of a deterministic model, not as a calculator or chatbot, so numbers stay auditable and the AI adds what spreadsheets lack: doubt, questions and structure.
 
 ## How we built it
 - Deterministic engine in pure Python (no dependencies): monthly cash flows, IRR, a hurdle solver with a capped bridge loan, and one protocol per land vocation.
@@ -39,6 +40,9 @@ In land, the payment structure matters as much as the price, and a signed user o
 
 ## What's next
 Protocols for mixed-use, tourism, agricultural and conservation land; comparable homologation across zones; a seller-side view to compare competing offers.
+
+## Built during the Submission Period
+The project was started from scratch on 30 September 2026, after the Submission Period opened; all code, cases and documents were created during the hackathon.
 
 ## Built with
 Python, NVIDIA Nemotron, Nebius Token Factory, Vercel, HTML/JS, Tavily (optional).

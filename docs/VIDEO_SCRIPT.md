@@ -1,15 +1,16 @@
 # Demo video script (under 3:00, English, on-screen captions, no voice required)
 
 Screen recording of the live demo (land-negotiator.vercel.app). All numbers are the fictitious demo cases.
+Order follows the review of 22/10: open with a real negotiation (email, land, price), make the Nemotron red team the hero, then show the deterministic number.
 
 | Time | On screen | Caption |
 |---|---|---|
-| 0:00-0:12 | Title card, then the app | "The land price agreed today decides a developer's margin for three years. This is a 20-year land criterion, turned into software." |
-| 0:12-0:25 | Thesis selector; case H | "Step 1: is the offer in the developer's line? Wrong city, too small: discarded before any math." |
-| 0:25-0:45 | Paste broker email, "Extract with Nemotron" | "Offers arrive as messy emails. Nemotron on Nebius Token Factory reads them into an offer file and flags what is missing. It never invents a number." |
-| 0:45-1:10 | Case A: GO, value chart, pro forma | "Deterministic code does the math: land price solved for 20% equity IRR and 2.0x, bridge loan on hard costs. Max bid = lower of project value (57.2 M) and closed comparables (56.3 M). Asking: 46 M → GO." |
-| 1:10-1:22 | Payment-structure bars | "How you pay changes what you can pay: 48.6 M all cash upfront vs 57.2 M with deferral and payment in apartments." |
-| 1:22-1:40 | Case C: BORDERLINE | "Seller asks 54 M; the price fits (max 55 M), but a critical feasibility item is still open. Borderline: tie payments to its accreditation before exposing capital." |
-| 1:40-2:10 | Case I: commercial lens, red team | "Commercial: demand first. Speculative, the land is worth 20.8 M; with a binding LOI from the AAA anchor, 35.8 M. Nemotron Ultra flags the LOI as the most fragile input and writes the questions for the seller." |
-| 2:10-2:30 | Case D: rental | "Build-to-rent: 63.4 M with a signed institutional buyer, 31.6 M without one. That is the negotiation." |
-| 2:30-2:50 | Architecture / provenance slide | "Every rule is tagged confirmed, historical or hypothesis. Nemotron reads and argues; code computes. Demo data is fictitious." |
+| 0:00-0:08 | Title card | "A broker sends a land offer. How much should you pay, and how?" |
+| 0:08-0:30 | Paste broker email, "Extract with Nemotron" | "Nemotron on Nebius Token Factory reads the email into an offer file and flags what is missing. It never invents a number." |
+| 0:30-1:05 | Case I (commercial), Evaluate with AI red team | "Asking: 30 M. Nemotron Ultra attacks the deal: the anchor's letter of intent is the weakest point. It writes the questions for the seller and proposes paying in tranches tied to that signature." |
+| 1:05-1:25 | Case I value chart | "Deterministic code does the math: 20.8 M speculative, 35.8 M only with a binding LOI. Borderline: do not pay the asking price before it is signed." |
+| 1:25-1:50 | Case A: GO, value chart, payment structure | "Residential: the land price is solved for 20% equity IRR and 2.0x with a bridge loan on hard costs, capped by closed comparables (56.3 M). Asking 46 M: GO. Paying with deferral and apartments supports 57.2 M vs 48.6 M in cash." |
+| 1:50-2:05 | Case A pro forma | "A quick sanity test against the developer's standard: land 20 · hard costs 40 · soft 10 · finance 5 · contingency 5 · margin 20." |
+| 2:05-2:20 | Case D: rental | "Build-to-rent: 63.4 M with a signed institutional buyer, 31.6 M without one. That is the negotiation." |
+| 2:20-2:30 | Case H: NO FIT; switch to Español | "Offers outside the developer's line are discarded before any math. Full English and Spanish." |
+| 2:30-2:50 | Architecture / provenance card | "Nemotron reads and argues; code computes. Every rule is tagged confirmed, historical or hypothesis. 20 tests. Demo data is fictitious." |
