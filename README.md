@@ -56,7 +56,7 @@ closest Nemotron and retries.
 ## Demo
 | Developer | Case | Verdict | What it shows |
 |---|---|---|---|
-| DEV-1 residential | A | GO | Asking 46 M under a 56.2 M max bid (closed comparables bind); deferral + in-kind units add 8.6 M vs. paying cash (48.6 M). Pro forma at max bid ≈ land 22 / hard 40 / soft+sales 10 / finance 4 / margin 21 |
+| DEV-1 residential | A | GO | Asking 46 M under a 56.3 M max bid (closed comparables bind); deferral + in-kind units add 8.6 M vs. paying cash (48.6 M). Pro forma at max bid ≈ land 22 / hard 40 / soft+sales 10 / finance 4 / margin 21 |
 | DEV-1 | B | NO-GO | Hard costs at 64% of sales (standard ~40%): supports only 10.7 M against 25 M asked; no scenario rescues it |
 | DEV-1 | C | BORDERLINE | 54 M asked fits under 55.0 M, but a critical feasibility is open: payments tied to its accreditation |
 | DEV-1 | G | NO-GO (land) | Uncertain title kills the land before any math |
@@ -68,7 +68,7 @@ closest Nemotron and retries.
 
 ## Run
 ```bash
-python3 -m unittest discover -s tests                     # 19 tests
+python3 -m unittest discover -s tests                     # 20 tests
 python3 -m evaluator.cli cases/case_c_residential_borderline.json --thesis developers/dev1_residential.json --lang es
 export NEBIUS_API_KEY=...  TAVILY_API_KEY=...             # optional AI steps
 python3 server.py                                          # http://localhost:7860
